@@ -12,9 +12,6 @@
 5. Pull latest image from private registry
 
 
-  
-  
-
 ## Introduction
 
 This Repo act as a personal note for learning and deploy CI/CD in local using :
@@ -30,7 +27,7 @@ This Repo act as a personal note for learning and deploy CI/CD in local using :
   
 
 ### Prerequisites
-
+	
 1. Docker
 
 2. Docker Compose
@@ -52,7 +49,7 @@ We Need To Find And Replace strings into your network interface IP than reachabl
 1. Install K3s
 `curl -sfL https://get.k3s.io | sh -s - --disable traefik`
 
-![](https://github.com/dimaspriyo/ci-cd-demo/screenshoots/k3s-running.png)
+![](https://github.com/dimaspriyo/ci-cd-demo/blob/main/screenshoots/k3s-running.png)
 
 2. Create secret for private registry , we are using admin:admin
 `chmod +x secret.sh && sh secret.sh`
@@ -83,7 +80,7 @@ We Need To Find And Replace strings into your network interface IP than reachabl
 Before deploy jenkins agent container , we need to copy and change the server ip in k3s.yaml and generate new ssh key
 
 - Create New file jenkins/k3s.yaml with k3s your kubeconfig (/etc/rancher/k3s/k3s.yaml) and replace server ip with your HOST IP
-	![](https://github.com/dimaspriyo/ci-cd-demo/screenshoots/k3s-kubeconfig.png)
+	![](https://github.com/dimaspriyo/ci-cd-demo/blob/main/screenshoots/k3s-kubeconfig.png)
 
 - Generate new ssh key for jenkins server and agent to communicate
 `ssh-keygen -t rsa -f ./jenkins/jenkins_agent_key -N ''`
