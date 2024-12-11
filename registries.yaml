@@ -1,0 +1,13 @@
+mirrors:
+  "HOST_IP:3010": # Replace with your private registry URL
+    endpoint:
+      - "http://HOST_IP:3010" #Adjust port based on your configuration
+
+configs:
+  "HOST_IP":
+    tls:
+      insecure_skip_verify: true
+    auth:
+      username: admin  # Replace with registry username
+      password: admin  # Replace with registry password
+

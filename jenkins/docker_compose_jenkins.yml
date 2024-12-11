@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+    jenkins:
+        container_name: jenkins
+        ports:
+            - 8080:8080
+            - 50000:50000
+        environment:
+            - JAVA_OPTS=-Djenkins.install.runSetupWizard=true
+        build:
+          context: .
+          dockerfile: jenkins_dockerfile
+        networks:
+            - jenkins
+
+networks:
+    jenkins:
+        name: jenkins
+        external: true

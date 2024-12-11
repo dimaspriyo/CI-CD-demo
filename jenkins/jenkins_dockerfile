@@ -1,0 +1,9 @@
+FROM jenkins/jenkins:2.488-alpine
+USER root
+RUN apk update
+RUN apk add busybox-extras
+RUN apk add vim
+RUN apk add openjdk17
+
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+ENV PATH="${JAVA_HOME}/bin:${PATH}"

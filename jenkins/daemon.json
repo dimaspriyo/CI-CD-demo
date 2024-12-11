@@ -1,0 +1,5 @@
+{
+    "insecure-registries": [
+        "HOST_IP:3010"
+    ]
+}

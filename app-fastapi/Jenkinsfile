@@ -1,0 +1,44 @@
+pipeline {
+    agent {
+        node {
+            label 'jenkins-runner'
+        }
+    }
+
+    stages {
+        stage('Build Docker Image Develop') {
+            when {
+                branch 'develop'
+            }
+            environment {
+                IMAGE_TAG = "develop-${env.BUILD_NUMBER}"
+                BRANCH = "MASTER"
+            }
+            steps {
+                sh '''#!/bin/bash
+                 echo $IMAGE_TAG 
+                '''
+            }
+        }
+        
+        stage('Build Docker Image Master') {
+            when {
+                branch 'master'
+            }
+            environment {
+                IMAGE_TAG = "master-${env.BUILD_NUMBER}"
+                BRANCH = "MASTER"
+                GIT_REPO_NAME = env.GIT_URL.replaceFirst(/^.*\/([^\/]+?).git$/, '$1')
+            }
+            steps {
+                sh '''#!/bin/bash
+                 echo $IMAGE_TAG 
+                '''
+                sh "chmod +x build.sh"
+                sh "./build.sh HOST_IP:3010 $GIT_REPO_NAME $BUILD_NUMBER"
+                sh "chmod +x deploy.sh"
+                sh "./deploy.sh $GIT_REPO_NAME $BUILD_NUMBER"
+            }
+        }
+    }
+}

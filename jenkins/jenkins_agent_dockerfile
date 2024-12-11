@@ -1,0 +1,67 @@
+FROM docker:27-dind
+
+RUN apk add --no-cache \
+    bash \
+    curl \
+    openjdk17 \
+    git \
+    jq \
+    busybox-extras \
+    kubectl \
+    openssh && \
+    ssh-keygen -A
+
+
+# Create and set permissions for the Remote Root Directory (e.g., /home/jenkins)
+RUN mkdir -p /home/jenkins && \
+    chmod -R 777 /home/jenkins  # Or use 755 if more restrictive permissions are preferred
+
+
+# Set JAVA_HOME and PATH
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+ENV JENKINS_JAVA_CMD=/usr/lib/jvm/java-17-openjdk/bin/java
+
+# Create symlink to the expected Java path
+RUN mkdir -p /home/jenkins/jdk/bin && \
+    ln -s /usr/lib/jvm/java-17-openjdk/bin/java /home/jenkins/jdk/bin/java && \
+    chmod -R 755 /home/jenkins/jdk && \
+    chmod +x /home/jenkins/jdk/bin/java
+
+
+RUN java -version
+
+EXPOSE 22
+
+# Set up Jenkins user for SSH access (optional but recommended)
+RUN whoami
+RUN mkdir /jenkins && mkdir -p /root/.ssh && chmod 700 /root/.ssh
+COPY jenkins_agent_key.pub /root/.ssh/authorized_keys
+RUN ls -l ~/.ssh
+RUN chmod 600 /root/.ssh/authorized_keys
+
+RUN echo "PermitRootLogin prohibit-password" >> /etc/ssh/sshd_config && \
+    echo "PasswordAuthentication no" >> /etc/ssh/sshd_config && \
+    echo "ChallengeResponseAuthentication no" >> /etc/ssh/sshd_config && \
+    echo "UsePAM no" >> /etc/ssh/sshd_config
+
+# Disable SSH host key checking for SSH client connections
+RUN echo "Host *" >> /etc/ssh/ssh_config && \
+    echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config && \
+    echo "UserKnownHostsFile /dev/null" >> /etc/ssh/ssh_config
+
+ENV DOCKER_TLS_CERTDIR=
+
+# # Setting insecure registry
+RUN mkdir /etc/docker
+COPY daemon.json /etc/docker/daemon.json
+
+COPY helloworld_dockerfile /home/jenkins/helloworld_dockerfile
+COPY k3s.yaml /home/jenkins
+
+RUN cat /etc/docker/daemon.json
+
+ENV KUBECONFIG=/home/jenkins/k3s.yaml
+
+
+CMD ["sh", "-c", "dockerd-entrypoint.sh & /usr/sbin/sshd -D"]

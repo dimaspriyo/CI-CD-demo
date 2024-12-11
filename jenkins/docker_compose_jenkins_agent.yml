@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+    jenkins_agent:
+        container_name: jenkins_agent
+        build:
+            context: .
+            dockerfile: jenkins_agent_dockerfile  
+        privileged: true 
+        networks:
+            - jenkins
+        restart: always  
+
+networks:
+    jenkins:
+        name: jenkins
+        external: true
