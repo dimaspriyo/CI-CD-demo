@@ -1,5 +1,5 @@
 
-![](https://github.com/dimaspriyo/ci-cd-demo/screenshoots/flow.png)
+![](https://github.com/dimaspriyo/ci-cd-demo/blob/main/screenshoots/flow.png)
 
 1. User push new commit
 
