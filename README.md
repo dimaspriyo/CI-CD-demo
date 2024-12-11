@@ -9,6 +9,9 @@
 
 4. Jenkins update kube deployment
 
+5. Pull latest image from private registry
+
+
   
   
 
@@ -27,7 +30,7 @@ This Repo act as a personal note for learning and deploy CI/CD in local using :
   
 
 ### Prerequisites
-	
+
 1. Docker
 
 2. Docker Compose
